@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+	<title>Отметки</title>
+	<meta charset="utf-8" />
+	<link rel="shortcut icon" type="image/x-icon" href="static/images/icon.png" />
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+	<link rel="stylesheet" href="static/css/login.css" />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="static/css/loader-2.css"> </head>
+<style>
+.table td,
+.table th {
+	vertical-align: middle;
+}
+
+input {
+	color: #495057;
+}
+
+.form-control:focus {
+	color: #495057;
+	background-color: #fff;
+	border-color: #9e9e9e;
+	outline: 0;
+	box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 0.38);
+}
+
+#update_div {
+	position: relative;
+	text-align: center;
+	top: 15px;
+}
+
+#update_date,
+#update_form {
+	display: inline-block;
+}
+
+#backlink {
+	position: relative;
+	top: -12px;
+}
+
+#table-container {
+	background-color: #fff;
+	box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.12);
+	border: 1px solid rgba(208, 215, 221, 0.7);
+	padding: 7px;
+	padding-top: 1px;
+	border-top: 0;
+}
+</style>
+<script>
+function loader() {
+	if(document.getElementById('pass_keeper').value.trim().length) {
+		document.getElementById('pass_keeper').readOnly = true;
+		document.getElementById('preloader').style.zIndex = '1000000000';
+		document.getElementById('preloader').style.position = 'fixed';
+		document.getElementById('preloader').style.width = '100%';
+		document.getElementById('preloader').style.height = '100%';
+		document.getElementById('preloader').style.opacity = '0.9';
+		document.getElementById('preloader').style.background = 'black';
+		document.getElementById('loader').style.opacity = '1';
+	}
+}
+</script>
+
+<body>
+	<div id="preloader">
+		<div id="loader"></div>
+	</div>
+	<nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 2px solid #e7e7e7;">
+		<div class="container"> <a class="navbar-brand" href="/" style="color: #007bff;">SCHOOLS.BY</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item"> <a class="nav-link" href="https://github.com/MaxZayats/site-extension">Как это работает ?</a> </li>
+					<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Связаться
+                            </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="https://t.me/MaxZayats"><img src="static/images/telegram.svg" style="height: 16px;bottom: 2px;left: -2px;position: relative;"> Telegram</a>
+							<a class="dropdown-item" href="https://vk.com/ZayatsMaxim"><img src="static/images/vk.svg" style="height: 16px;bottom: 2px;left: -2px;position: relative;"> VK</a>
+							<a class="dropdown-item" href="https://GitHub.com/MaxZayats"><img src="static/images/github-logo.svg" style="height: 16px;bottom: 2px;left: -2px;position: relative;"> GitHub</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div id="table-container" class="container">
+        {% if bad_login %}
+        <div style="text-align: center; margin: 10px;" class="alert alert-danger">Неверный пароль</div>
+        {% endif %}
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="width: 1px; vertical-align: middle;" scope="col">Предмет</th>
+					<th style="text-align: center; width: 1px; vertical-align: middle;" scope="col">Средний балл</th>
+					<th style="vertical-align: middle;" scope="col">Оценки</th>
+				</tr>
+			</thead>
+			<tbody>
+                {% for lesson, marks in diary.items() %}
+				<tr>
+					<th scope="row">{{lesson}}</th>
+					<td id="{{lesson}}" class="average" style="text-align: center;">None</td>
+					<td style="padding-right: 0;">
+						<input id="{{lesson}}" class="form-control marks" type="text" value="{{marks|join(', ')}}" />
+					</td>
+                </tr>
+                {% endfor %}
+				<tr>
+					<th scope="row">Общий Балл</th>
+					<td id="global_average" style="text-align: center;">None</td>
+					<td style="padding-right: 0;">
+						<input id="global_marks_input" class="form-control" type="text" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="update_div"> <b id="update_date">Последние обновление: {{update_date}}</b>
+		<br />
+		<button class="btn btn-outline-dark" id="update" data-toggle="modal" data-target="#exampleModalCenter" style="margin: 2px;"> Обновить </button>
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Подтверждение обновления</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+					</div>
+					<div class="modal-body" style="border-bottom: 1px solid #e9ecef;">
+						<form method="post" action="/update">
+							<div class="form-group">
+								<label>Введите пароль</label>
+								<input id="pass_keeper" type="password" name="password" placeholder="Пароль" required="required" maxlength="255" class="form-control" /> </div>
+							<button class="btn btn-outline-dark" onclick="loader()">Обновить</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<br /> <a class="btn btn-outline-danger" id="backlink" href="/logout">Выйти</a> </div>
+	<div class="footer text-center py-3">© Created by MaxZayats: <a href="https://github.com/maxzayats"> GitHub.com</a> </div>
+</body>
+<script>
+//заполнение средним баллом
+marks_input = document.getElementsByClassName("marks");
+average = document.getElementsByClassName("average");
+for(let i = 0; i < marks_input.length; i++) {
+	marks = marks_input[i].value.replace(/\//g, ",").split(",");
+	sum = 0;
+	for(let j = 0; j < marks.length; j++) {
+		sum += parseInt(marks[j], 10);
+	}
+	average[i].innerHTML = (sum / marks.length).toFixed(3);
+}
+data = caclulate_global_average();
+document.querySelector("#global_average").innerText = data[0];
+document.querySelector("#global_marks_input").value = data[1];
+//---
+function caclulate_global_average() {
+	marks = document.getElementsByClassName("average");
+	sum = 0;
+	all_marks = "";
+	for(let i = 0; i < marks.length; i++) {
+		all_marks += Math.round(marks[i].innerText) + ", ";
+		sum += Math.round(marks[i].innerText);
+	}
+	return [(sum / marks.length).toFixed(3), all_marks.substring(0, all_marks.length - 2)];
+}
+//---
+//Посчёт среднего балла из инпута(при вводе)
+$("input").on("keyup", function() {
+	id = $(this).attr("id");
+	marks = $(this).val();
+	if(marks[marks.length - 1] != "," || marks[marks.length - 1] != " ") {
+		marks = marks.replace(/\//g, ",").replace(/ /g, "").split(",");
+		sum = 0;
+		for(let j = 0; j < marks.length; j++) {
+			sum += parseInt(marks[j], 10);
+		}
+		document.getElementById(id).innerHTML = (sum / marks.length).toFixed(3);
+		data = caclulate_global_average();
+		document.querySelector("#global_average").innerText = data[0];
+		document.querySelector("#global_marks_input").value = data[1];
+	}
+});
+</script>
+
+</html>
